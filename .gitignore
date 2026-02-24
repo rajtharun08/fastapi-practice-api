@@ -1,0 +1,83 @@
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# Virtual Environments
+# =========================
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# Python Cache & Compiled Files
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Distribution / Packaging
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# SQLite / Local Databases
+# =========================
+*.db
+*.sqlite3
+
+# =========================
+# Pytest / Coverage
+# =========================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# =========================
+# Type Checking
+# =========================
+.mypy_cache/
+.pyre/
+
+# =========================
+# Jupyter Notebook
+# =========================
+.ipynb_checkpoints
+
+# =========================
+# IDE / Editor Settings
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# FastAPI Specific
+# =========================
+# If using Uvicorn reload files
+*.reload
+
