@@ -1,32 +1,45 @@
+from app.repositories.enrollment_repository import EnrollmentRepository
+from app.repositories.student_repository import StudentRepository
+from app.repositories.course_repository import CourseRepository
 from fastapi import HTTPException
 
 class EnrollmentService:
-    def __init__(self, enrollment_repository, student_repository, course_repository):
-        self.enrollment_repository = enrollment_repository
-        self.student_repository = student_repository
-        self.course_repository = course_repository
+    def __init__(
+        self, 
+        enrollment_repo: EnrollmentRepository,
+        student_repo: StudentRepository,
+        course_repo: CourseRepository
+    ):
+        self.enrollment_repo = enrollment_repo
+        self.student_repo = student_repo
+        self.course_repo = course_repo
 
-    def enroll_student(self, enrollment_data):
-        if not self.student_repository.get_by_id(enrollment_data.student_id):
-            raise HTTPException(status_code=404, detail="student not found")
+    def enroll_student(self, student_id: int, course_id: int):
+        if not self.student_repo.get_by_id(student_id):
+            raise HTTPException(status_code=404, detail="Student not found") 
+        
+        if not self.course_repo.get_by_id(course_id):
+            raise HTTPException(status_code=404, detail="Course not found") 
 
-        if not self.course_repository.get_by_id(enrollment_data.course_id):
-            raise HTTPException(status_code=404, detail="course not found")
-        if self.enrollment_repository.check_exists(enrollment_data.student_id, enrollment_data.course_id):
-            raise HTTPException(status_code=400, detail="already enrolled")
+        if self.enrollment_repo.check_exists(student_id, course_id):
+            raise HTTPException(status_code=400, detail="Already enrolled")
 
-        return self.enrollment_repository.enroll(enrollment_data.model_dump())
+        return self.enrollment_repo.enroll({"student_id": student_id, "course_id": course_id})
 
     def get_all_enrollments(self):
-        return self.enrollment_repository.get_all()
-    
+        return self.enrollment_repo.get_all()
+
     def get_student_enrollments(self, student_id: int):
-        enrollments = self.enrollment_repository.get_by_student(student_id)
-        results = []
-        for e in enrollments:
-            course = self.course_repository.get_by_id(e["course_id"])
-            results.append({
-                "course_id": e["course_id"],
-                "course_title": course["title"] if course else "Unknown"
+        if not self.student_repo.get_by_id(student_id):
+            raise HTTPException(status_code=404, detail="Student not found")
+            
+        enrollments = self.enrollment_repo.get_by_student(student_id)
+        
+        result = []
+        for enrollment in enrollments:
+            course = self.course_repo.get_by_id(enrollment.course_id)
+            result.append({
+                "course_id": course.id,
+                "course_title": course.title
             })
-        return results
+        return result
