@@ -8,12 +8,12 @@ class EnrollmentService:
 
     def enroll_student(self, enrollment_data):
         if not self.student_repository.get_by_id(enrollment_data.student_id):
-            raise HTTPException(status_code=404, detail="Student not found")
+            raise HTTPException(status_code=404, detail="student not found")
 
         if not self.course_repository.get_by_id(enrollment_data.course_id):
-            raise HTTPException(status_code=404, detail="Course not found")
+            raise HTTPException(status_code=404, detail="course not found")
         if self.enrollment_repository.check_exists(enrollment_data.student_id, enrollment_data.course_id):
-            raise HTTPException(status_code=400, detail="Already enrolled")
+            raise HTTPException(status_code=400, detail="already enrolled")
 
         return self.enrollment_repository.enroll(enrollment_data.model_dump())
 
